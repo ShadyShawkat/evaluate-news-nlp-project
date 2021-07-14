@@ -1,16 +1,49 @@
 function handleSubmit(event) {
-    event.preventDefault()
+  event.preventDefault();
 
-    // check what text was put into the form field
-    let formText = document.getElementById('name').value
-    checkForName(formText)
+  const url = document.getElementById("name").value;
 
-    console.log("::: Form Submitted :::")
-    fetch('http://localhost:8080/test')
-    .then(res => res.json())
-    .then(function(res) {
-        document.getElementById('results').innerHTML = res.message
-    })
+  // check what text was put into the form field
+  const isValidUrl = Client.urlChecker(url);
+
+  if (!isValidUrl) {
+    alert("INVALID URL");
+    return;
+  }
+
+  console.log("::: Form Submitted :::");
+  analyzeURL(url);
 }
 
-export { handleSubmit }
+function analyzeURL(url) {
+  fetch(`http://localhost:8081/getData`, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ url: url }),
+  }).then(() => getData());
+}
+
+function getData() {
+  fetch("http://localhost:8081/sendData", {
+    method: "GET",
+  })
+    .then((res) => res.json())
+    .then((data) => showData(data));
+}
+
+function showData(data) {
+  document.getElementById("result").innerHTML = 
+        `<ul>
+            <li>Score tag: ${data.score_tag}</li>
+            <li>Subjectivity: ${data.subjectivity}</li>
+            <li>Agreement: ${data.agreement}</li>
+            <li>Model: ${data.model}</li>
+            <li>Irony: ${data.irony}</li>
+            <li>Confidence: ${data.confidence}</li>
+        </ul>`;
+}
+
+export { handleSubmit };

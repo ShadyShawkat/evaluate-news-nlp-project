@@ -1,19 +1,32 @@
 const path = require('path')
-const webpack = require('webpack')
 const HtmlWebPackPlugin = require("html-webpack-plugin")
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = {
     entry: './src/client/index.js',
     mode: 'development',
+    target: 'node',
+    output: {
+        filename: 'main.js',
+        path: path.resolve(__dirname, 'dist'),
+        libraryTarget: 'var',
+        library: 'Client'
+    },
+    devServer: {
+        port: 8080,
+        contentBase: path.resolve(__dirname, 'dist')
+    },
     devtool: 'source-map',
     stats: 'verbose',
     module: {
-        rules: [
-            {
-                test: '/\.js$/',
+        rules: [{
+                test: /\.js$/,
                 exclude: /node_modules/,
                 loader: "babel-loader"
+            },
+            {
+                test: /\.scss$/,
+                use: ['style-loader', 'css-loader', 'sass-loader']
             }
         ]
     },
