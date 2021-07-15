@@ -16,25 +16,26 @@ function handleSubmit(event) {
 }
 
 function analyzeURL(url) {
-  fetch(`http://localhost:8081/getData`, {
+  console.log("Posting Data")
+  fetch("http://localhost:8080/getData", {
     method: "POST",
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ url: url }),
-  }).then(() => getData());
+  }).then((data) => getData());
 }
 
 function getData() {
-  fetch("http://localhost:8081/sendData", {
-    method: "GET",
-  })
+  console.log("Getting Data")
+  fetch("http://localhost:8080/sendData")
     .then((res) => res.json())
     .then((data) => showData(data));
 }
 
 function showData(data) {
+  console.log("ShowingData")
   document.getElementById("result").innerHTML = 
         `<ul>
             <li>Score tag: ${data.score_tag}</li>

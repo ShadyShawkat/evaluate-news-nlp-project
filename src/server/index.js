@@ -21,7 +21,6 @@ app.get("/", function (res) {
 });
 
 app.post("/getData", (req, res) => {
-
   request(
     `https://api.meaningcloud.com/sentiment-2.1?key=${application_key}&url=${req.body.url}&lang=en`,
     function (error, response, body) {
@@ -33,17 +32,18 @@ app.post("/getData", (req, res) => {
         endPointData.irony = JSON.parse(body).irony;
         endPointData.confidence = JSON.parse(body).confidence;
         res.send(body);
-      }
+      } else {
+      res.send('Not permitted')
+    }
     }
   );
 });
 
 
-app.get('/sendData', res => {
+app.get("/sendData", (req, res) => {
     res.send(endPointData);
 });
 
-// designates what port the app will listen to for incoming requests
 app.listen(8080, function () {
   console.log("Example app listening on port 8080!");
 });
